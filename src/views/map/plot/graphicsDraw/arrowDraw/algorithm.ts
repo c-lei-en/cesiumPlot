@@ -298,15 +298,9 @@ export const arrowPlot: AllPlotI = {
     },
     // * 获取钳击箭头坐标
     getDoubleArrow: (pnts: PointArr[]): Cartesian3[] => {
-      let pnt;
-      if (pnts.length == 2 || pnts[1].toString() == pnts[2].toString()) {
-        const mid = P.PlotUtils.mid(pnts[0], pnts[1]);
-        const d = P.PlotUtils.distance(pnts[0], mid);
-        pnt = P.PlotUtils.getThirdPoint(pnts[0], mid, P.Constants.HALF_PI, d);
-      }
       const pnt1 = pnts[0];
       const pnt2 = pnts[1];
-      const pnt3 = pnt ? pnt : pnts[2];
+      const pnt3 = pnts[2];
       let tempPoint4, connPoint;
       if (pnts.length == 3)
         tempPoint4 = arrowPlot.algorithm.getTempPoint4(pnt1, pnt2, pnt3);
@@ -365,7 +359,11 @@ export const arrowPlot: AllPlotI = {
         lArrowPnts,
         lrBodyPnts
       );
-      return positions;
+      const res = [] as Cartesian3[];
+      positions.forEach((pos: PointArr) => {
+        res.push(lonLatToCartesian(pos));
+      });
+      return res;
     },
     // * 获取细直箭头或者突击方向箭头坐标
     getFineOrAssault: (pnts: PointArr, param: FineOrAssault): Cartesian3[] => {
@@ -542,7 +540,7 @@ export const arrowPlot: AllPlotI = {
       return leftBodyPnts.concat(rightBodyPnts);
     },
     // * 获取进攻方向坐标
-    getAttackArrow: (pnts: PointArr[]): PointArr[] => {
+    getAttackArrow: (pnts: PointArr[]): Cartesian3[] => {
       // 计算箭尾
       let tailLeft = pnts[0];
       let tailRight = pnts[1];
@@ -579,10 +577,15 @@ export const arrowPlot: AllPlotI = {
 
       leftPnts = P.PlotUtils.getQBSplinePoints(leftPnts);
       rightPnts = P.PlotUtils.getQBSplinePoints(rightPnts);
-      return leftPnts.concat(headPnts, rightPnts.reverse());
+      const positions = leftPnts.concat(headPnts, rightPnts.reverse());
+      const res = [] as Cartesian3[];
+      positions.forEach((pos: PointArr) => {
+        res.push(lonLatToCartesian(pos));
+      });
+      return res;
     },
     // * 获取进攻方向尾坐标
-    getTailedAttackArrow: (pnts: PointArr[]): PointArr[] => {
+    getTailedAttackArrow: (pnts: PointArr[]): Cartesian3[] => {
       let tailLeft = pnts[0];
       let tailRight = pnts[1];
       if (P.PlotUtils.isClockWise(pnts[0], pnts[1], pnts[2])) {
@@ -626,11 +629,15 @@ export const arrowPlot: AllPlotI = {
 
       leftPnts = P.PlotUtils.getQBSplinePoints(leftPnts);
       rightPnts = P.PlotUtils.getQBSplinePoints(rightPnts);
-
-      return leftPnts.concat(headPnts, rightPnts.reverse(), [
+      const positions = leftPnts.concat(headPnts, rightPnts.reverse(), [
         swallowTailPnt,
         leftPnts[0],
       ]);
+      const res = [] as Cartesian3[];
+      positions.forEach((pos: PointArr) => {
+        res.push(lonLatToCartesian(pos));
+      });
+      return res;
     },
     // * 获取尾点
     getTailPoints: (points: PointArr): PointArr[] => {
@@ -653,7 +660,7 @@ export const arrowPlot: AllPlotI = {
       return [tailLeft, tailRight];
     },
     // * 获取分队战斗行动坐标
-    getSquadCombat: (pnts: PointArr[]): PointArr[] => {
+    getSquadCombat: (pnts: PointArr[]): Cartesian3[] => {
       const tailPnts = arrowPlot.algorithm.getTailPoints(pnts);
       const headPnts = arrowPlot.algorithm.getAttackArrowHeadPoints(
         pnts,
@@ -676,8 +683,12 @@ export const arrowPlot: AllPlotI = {
 
       leftPnts = P.PlotUtils.getQBSplinePoints(leftPnts);
       rightPnts = P.PlotUtils.getQBSplinePoints(rightPnts);
-
-      return leftPnts.concat(headPnts, rightPnts.reverse());
+      const positions = leftPnts.concat(headPnts, rightPnts.reverse());
+      const res = [] as Cartesian3[];
+      positions.forEach((pos: PointArr) => {
+        res.push(lonLatToCartesian(pos));
+      });
+      return res;
     },
     // * 获取分队战斗行动尾尾点
     getTailedTailPoints: (points: PointArr): PointArr[] => {
@@ -708,7 +719,7 @@ export const arrowPlot: AllPlotI = {
       return [tailLeft, swallowTailPnt, tailRight];
     },
     // * 获取分队战斗行动尾坐标
-    getTailedSquadCombat: (pnts: PointArr[]): PointArr[] => {
+    getTailedSquadCombat: (pnts: PointArr[]): Cartesian3[] => {
       const tailPnts = arrowPlot.algorithm.getTailedTailPoints(pnts);
       const headPnts = arrowPlot.algorithm.getAttackArrowHeadPoints(
         pnts,
@@ -731,10 +742,15 @@ export const arrowPlot: AllPlotI = {
 
       leftPnts = P.PlotUtils.getQBSplinePoints(leftPnts);
       rightPnts = P.PlotUtils.getQBSplinePoints(rightPnts);
-      return leftPnts.concat(headPnts, rightPnts.reverse(), [
+      const positions = leftPnts.concat(headPnts, rightPnts.reverse(), [
         tailPnts[1],
         leftPnts[0],
       ]);
+      const res = [] as Cartesian3[];
+      positions.forEach((pos: PointArr) => {
+        res.push(lonLatToCartesian(pos));
+      });
+      return res;
     },
   },
 };
