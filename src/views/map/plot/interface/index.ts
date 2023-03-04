@@ -79,6 +79,24 @@ export interface BaseAreaI {
   clickStep: number;
 }
 
+// * 基础箭头类接口
+export interface BaseArrowI {
+  type: string;
+  objId: number;
+  handler: any;
+  state: number; //state用于区分当前的状态 0 为删除 1为添加 2为编辑
+  step: number; // 表明选中了第几个点
+  arrowPrimitive: any;
+  arrowEntity: any;
+  floatPoint: any;
+  floatPointArr: any[];
+  modifyHandler: any;
+  pointList: any[];
+  material: any;
+  selectPoint: any;
+  clickStep: number;
+}
+
 // * 所有绘制类型所需要遵守实现的函数
 export interface PlotFuncI {
   // * 退出绘制
