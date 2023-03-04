@@ -10,6 +10,7 @@ import type {
   FreeHandPolygon,
   GatheringPlace,
 } from "../graphicsDraw/areaDraw";
+import type { AssaultDirection, AttackArrow, DoubleArrow, FineArrow, SquadCombat, StraightArrow, TailedAttackArrow, TailedSquadCombat } from "../graphicsDraw/arrowDraw";
 import type {
   Arc,
   Curve,
@@ -169,4 +170,12 @@ export type PlotClass =
   | ClosedCurve
   | Polygon
   | FreeHandPolygon
-  | GatheringPlace;
+  | GatheringPlace
+  | DoubleArrow
+  | StraightArrow
+  | FineArrow
+  | AssaultDirection
+  | AttackArrow
+  | TailedAttackArrow
+  | SquadCombat
+  | TailedSquadCombat;
