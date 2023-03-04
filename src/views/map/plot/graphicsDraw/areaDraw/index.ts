@@ -504,7 +504,7 @@ class Ellipse extends BaseArea implements PlotFuncI {
   }
 }
 
-// * lune 椭圆
+// * lune 弓形
 class Lune extends BaseArea implements PlotFuncI {
   constructor() {
     super({
