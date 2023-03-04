@@ -25,6 +25,16 @@ import {
   Rectangle,
   Sector,
 } from "./graphicsDraw/areaDraw";
+import {
+  AssaultDirection,
+  AttackArrow,
+  DoubleArrow,
+  FineArrow,
+  SquadCombat,
+  StraightArrow,
+  TailedAttackArrow,
+  TailedSquadCombat,
+} from "./graphicsDraw/arrowDraw";
 
 export default class PlotDraw {
   drawArr: Array<any>;
@@ -53,8 +63,14 @@ export default class PlotDraw {
       polygonData: [],
       freehandpolygonData: [],
       gatheringplaceData: [],
-      attackArrowData: [],
-      pincerArrowData: [],
+      doublearrowData: [],
+      straightarrowData: [],
+      finearrowData: [],
+      assaultdirectionData: [],
+      attackarrowData: [],
+      tailedattackarrowData: [],
+      squadcombatData: [],
+      tailedsquadcombatData: [],
     };
     this.drawArr = [];
     emitter.on("drawEnd", () => {
@@ -143,7 +159,38 @@ export default class PlotDraw {
         this.nowObj = new GatheringPlace();
         this.nowObj.startDraw();
         break;
-
+      case "doubleArrow":
+        this.nowObj = new DoubleArrow();
+        this.nowObj.startDraw();
+        break;
+      case "straightArrow":
+        this.nowObj = new StraightArrow();
+        this.nowObj.startDraw();
+        break;
+      case "fineArrow":
+        this.nowObj = new FineArrow();
+        this.nowObj.startDraw();
+        break;
+      case "assaultDirection":
+        this.nowObj = new AssaultDirection();
+        this.nowObj.startDraw();
+        break;
+      case "attackArrow":
+        this.nowObj = new AttackArrow();
+        this.nowObj.startDraw();
+        break;
+      case "tailedAttackArrow":
+        this.nowObj = new TailedAttackArrow();
+        this.nowObj.startDraw();
+        break;
+      case "squadCombat":
+        this.nowObj = new SquadCombat();
+        this.nowObj.startDraw();
+        break;
+      case "tailedSquadCombat":
+        this.nowObj = new TailedSquadCombat();
+        this.nowObj.startDraw();
+        break;
       default:
         break;
     }
