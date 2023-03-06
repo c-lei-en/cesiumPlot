@@ -2,10 +2,8 @@ import {
   Appearance,
   Billboard,
   CallbackProperty,
-  Cartesian3,
   Color,
   defined,
-  EllipseGeometry,
   Entity,
   GeometryInstance,
   GroundPrimitive,
@@ -15,11 +13,8 @@ import {
   ScreenSpaceEventHandler,
   ScreenSpaceEventType,
   VerticalOrigin,
-  Math as cesiumMath,
   PolygonGeometry,
   PolygonHierarchy,
-  Rectangle as cesiumRectangle,
-  RectangleGeometry,
   GroundPolylineGeometry,
   GroundPolylinePrimitive,
   PolylineMaterialAppearance,
@@ -270,7 +265,10 @@ class DoubleArrow extends BaseArrow implements PlotFuncI {
         const lnglat = cartesianToLonlat(this.pointList[i]);
         lnglatArr.push(lnglat);
       }
-      if (lnglatArr.length == 2) {
+      if (
+        lnglatArr.length == 2 ||
+        lnglatArr[1].toString() == lnglatArr[2].toString()
+      ) {
         lnglatArr.push([lnglatArr[1][0] + 0.0000001, lnglatArr[1][1]]);
       }
       const res = arrowPlot.algorithm.getDoubleArrow(lnglatArr);
@@ -1023,6 +1021,12 @@ class AttackArrow extends BaseArrow implements PlotFuncI {
       }
       if (lnglatArr.length == 2) {
         lnglatArr.push([lnglatArr[1][0] + 0.0000001, lnglatArr[1][1]]);
+      } else if (
+        lnglatArr[lnglatArr.length - 1].toString() ==
+          lnglatArr[lnglatArr.length - 2].toString() &&
+        lnglatArr.length > 3
+      ) {
+        lnglatArr.pop();
       } else {
         lnglatArr[lnglatArr.length - 1][0] += 0.0000001;
       }
@@ -1217,7 +1221,13 @@ class TailedAttackArrow extends BaseArrow implements PlotFuncI {
       }
       if (lnglatArr.length == 2) {
         lnglatArr.push([lnglatArr[1][0] + 0.0000001, lnglatArr[1][1]]);
-      } else if (lnglatArr.length > 2) {
+      } else if (
+        lnglatArr[lnglatArr.length - 1].toString() ==
+          lnglatArr[lnglatArr.length - 2].toString() &&
+        lnglatArr.length > 3
+      ) {
+        lnglatArr.pop();
+      } else {
         lnglatArr[lnglatArr.length - 1][0] += 0.0000001;
       }
       const res = arrowPlot.algorithm.getTailedAttackArrow(lnglatArr);
@@ -1411,7 +1421,13 @@ class SquadCombat extends BaseArrow implements PlotFuncI {
       }
       if (lnglatArr.length == 2) {
         lnglatArr.push([lnglatArr[1][0] + 0.0000001, lnglatArr[1][1]]);
-      } else if (lnglatArr.length > 2) {
+      } else if (
+        lnglatArr[lnglatArr.length - 1].toString() ==
+          lnglatArr[lnglatArr.length - 2].toString() &&
+        lnglatArr.length > 3
+      ) {
+        lnglatArr.pop();
+      } else {
         lnglatArr[lnglatArr.length - 1][0] += 0.0000001;
       }
       const res = arrowPlot.algorithm.getSquadCombat(lnglatArr);
@@ -1580,7 +1596,7 @@ class TailedSquadCombat extends BaseArrow implements PlotFuncI {
       id: this.objId,
       geometry: new PolygonGeometry({
         polygonHierarchy: new PolygonHierarchy(
-          arrowPlot.algorithm.getSquadCombat(lnglatArr)
+          arrowPlot.algorithm.getTailedSquadCombat(lnglatArr)
         ),
       }),
     });
@@ -1605,10 +1621,16 @@ class TailedSquadCombat extends BaseArrow implements PlotFuncI {
       }
       if (lnglatArr.length == 2) {
         lnglatArr.push([lnglatArr[1][0] + 0.0000001, lnglatArr[1][1]]);
-      } else if (lnglatArr.length > 2) {
+      } else if (
+        lnglatArr[lnglatArr.length - 1].toString() ==
+          lnglatArr[lnglatArr.length - 2].toString() &&
+        lnglatArr.length > 3
+      ) {
+        lnglatArr.pop();
+      } else {
         lnglatArr[lnglatArr.length - 1][0] += 0.0000001;
       }
-      const res = arrowPlot.algorithm.getSquadCombat(lnglatArr);
+      const res = arrowPlot.algorithm.getTailedSquadCombat(lnglatArr);
       return new PolygonHierarchy(res);
     };
     return window.Viewer.entities.add({
