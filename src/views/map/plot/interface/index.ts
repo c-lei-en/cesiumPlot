@@ -10,7 +10,16 @@ import type {
   FreeHandPolygon,
   GatheringPlace,
 } from "../graphicsDraw/areaDraw";
-import type { AssaultDirection, AttackArrow, DoubleArrow, FineArrow, SquadCombat, StraightArrow, TailedAttackArrow, TailedSquadCombat } from "../graphicsDraw/arrowDraw";
+import type {
+  AssaultDirection,
+  AttackArrow,
+  DoubleArrow,
+  FineArrow,
+  SquadCombat,
+  StraightArrow,
+  TailedAttackArrow,
+  TailedSquadCombat,
+} from "../graphicsDraw/arrowDraw";
 import type {
   Arc,
   Curve,
