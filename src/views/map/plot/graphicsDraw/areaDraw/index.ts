@@ -58,9 +58,10 @@ class BaseArea implements BaseAreaI {
     this.clickStep = obj.clickStep;
   }
   disable() {
-    if (this.areaPrimitive) {
-      window.Viewer.polylines.remove(this.areaPrimitive);
-      this.areaPrimitive = null;
+    if (this.areaEntity) {
+      window.Viewer.entities.remove(this.areaEntity);
+      window.Viewer.billboards.remove(this.floatPoint);
+      this.areaEntity = null;
     }
     this.state = -1;
     this.stopDraw();

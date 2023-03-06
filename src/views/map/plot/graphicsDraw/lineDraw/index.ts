@@ -54,8 +54,9 @@ class BaseLine implements BaseLineI {
   }
   disable() {
     if (this.linePrimitive) {
-      window.Viewer.polylines.remove(this.linePrimitive);
-      this.linePrimitive = null;
+      window.Viewer.entities.remove(this.lineEntity);
+      window.Viewer.billboards.remove(this.floatPoint);
+      this.lineEntity = null;
     }
     this.state = -1;
     this.stopDraw();

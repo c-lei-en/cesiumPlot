@@ -57,9 +57,10 @@ class BaseArrow implements BaseArrowI {
     this.clickStep = obj.clickStep;
   }
   disable() {
-    if (this.arrowPrimitive) {
-      window.Viewer.polylines.remove(this.arrowPrimitive);
-      this.arrowPrimitive = null;
+    if (this.arrowEntity) {
+      window.Viewer.entities.remove(this.arrowEntity);
+      window.Viewer.billboards.remove(this.floatPoint);
+      this.arrowEntity = null;
     }
     this.state = -1;
     this.stopDraw();
