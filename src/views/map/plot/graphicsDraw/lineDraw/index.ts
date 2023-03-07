@@ -53,7 +53,7 @@ class BaseLine implements BaseLineI {
     this.clickStep = obj.clickStep;
   }
   disable() {
-    if (this.linePrimitive) {
+    if (this.lineEntity) {
       window.Viewer.entities.remove(this.lineEntity);
       window.Viewer.billboards.remove(this.floatPoint);
       this.floatPointArr.forEach((item: Billboard) => {
