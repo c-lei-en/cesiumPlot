@@ -682,6 +682,9 @@ class Lune extends BaseArea implements PlotFuncI {
         const lnglat = cartesianToLonlat(this.pointList[i]);
         lnglatArr.push(lnglat);
       }
+      if (lnglatArr.length == 2) {
+        lnglatArr.push([lnglatArr[1][0] + 0.0000001, lnglatArr[1][1]]);
+      }
       const res = areaPlot.algorithm.getArcPositions(lnglatArr);
       return new PolygonHierarchy(res);
     };
