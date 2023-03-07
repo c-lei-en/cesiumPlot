@@ -60,6 +60,9 @@ class BaseArrow implements BaseArrowI {
     if (this.arrowEntity) {
       window.Viewer.entities.remove(this.arrowEntity);
       window.Viewer.billboards.remove(this.floatPoint);
+      this.floatPointArr.forEach((item: Billboard) => {
+        window.Viewer.billboards.remove(item);
+      });
       this.arrowEntity = null;
     }
     this.state = -1;

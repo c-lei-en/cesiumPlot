@@ -61,6 +61,9 @@ class BaseArea implements BaseAreaI {
     if (this.areaEntity) {
       window.Viewer.entities.remove(this.areaEntity);
       window.Viewer.billboards.remove(this.floatPoint);
+      this.floatPointArr.forEach((item: Billboard) => {
+        window.Viewer.billboards.remove(item);
+      });
       this.areaEntity = null;
     }
     this.state = -1;

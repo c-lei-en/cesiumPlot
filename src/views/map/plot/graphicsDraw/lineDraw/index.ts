@@ -56,6 +56,9 @@ class BaseLine implements BaseLineI {
     if (this.linePrimitive) {
       window.Viewer.entities.remove(this.lineEntity);
       window.Viewer.billboards.remove(this.floatPoint);
+      this.floatPointArr.forEach((item: Billboard) => {
+        window.Viewer.billboards.remove(item);
+      });
       this.lineEntity = null;
     }
     this.state = -1;
