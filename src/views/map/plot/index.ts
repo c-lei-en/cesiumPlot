@@ -37,7 +37,7 @@ import {
 } from "./graphicsDraw/arrowDraw";
 
 export default class PlotDraw {
-  drawArr: Array<any>;
+  drawArr: PlotClass[];
   handler: any;
   jsonData: any;
   nowObj: PlotClass | null;
@@ -74,12 +74,14 @@ export default class PlotDraw {
     };
     this.drawArr = [];
     emitter.on("drawEnd", () => {
-      this.drawArr.push(this.nowObj);
+      this.drawArr.push(this.nowObj as PlotClass);
       this.drawArr[this.drawArr.length - 1]?.stopDraw();
       this.saveData();
+      this.nowObj = null;
     });
     emitter.on("modifiedEnd", () => {
       this.startModified();
+      this.nowObj = null;
     });
     // * 将点位集合在此处创建，因为不论绘制/修改哪一个标绘都需要有移动点
     if (!window.Viewer.billboards)
@@ -91,6 +93,7 @@ export default class PlotDraw {
   }
   disable() {
     if (this.handler) {
+      this.drawArr.splice(this.drawArr.indexOf(this.nowObj as PlotClass), 1);
       this.nowObj?.disable();
       this.nowObj = null;
       this.handler.removeInputAction(ScreenSpaceEventType.LEFT_CLICK);
@@ -215,6 +218,7 @@ export default class PlotDraw {
           console.log("上一步操作未结束，请继续完成上一步！");
           return;
         }
+      } else {
         if (defined(pick) && pick.id) {
           for (let i = 0; i < $this.drawArr.length; i++) {
             if (pick.id == $this.drawArr[i].objId) {
@@ -234,26 +238,17 @@ export default class PlotDraw {
     this.handler = null;
   }
   clearOne() {
-    const $this = this;
-    this.handler.setInputAction(function (evt: any) {
-      //单机开始绘制
-      const pick = window.Viewer.scene.pick(evt.position);
-      if (defined(pick) && pick.id) {
-        for (let i = 0; i < $this.drawArr.length; i++) {
-          if (pick.id.objId == $this.drawArr[i].objId) {
-            $this.drawArr[i].clear();
-            $this.drawArr.splice(i, 1);
-            break;
-          }
-        }
-        $this.handler.destroy();
-        $this.startModified();
-      }
-    }, ScreenSpaceEventType.LEFT_CLICK);
+    if (this.nowObj) {
+      const index = this.drawArr.indexOf(this.nowObj);
+      this.drawArr[index]?.disable();
+      this.drawArr.splice(index, 1);
+      this.startModified();
+      this.nowObj = null;
+    }
   }
   clearAll() {
     for (let i = 0; i < this.drawArr.length; i++) {
-      this.drawArr[i].clear();
+      this.drawArr[i].disable();
     }
   }
 }

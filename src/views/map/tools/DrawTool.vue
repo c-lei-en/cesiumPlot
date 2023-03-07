@@ -3,16 +3,25 @@
     <el-tabs style="height: 100%" type="border-card">
       <el-tab-pane label="标绘工具">
         <el-space :fill="true" wrap>
-          <el-switch
-            v-model="isModified"
-            inline-prompt
-            style="
-              --el-switch-on-color: #13ce66;
-              --el-switch-off-color: #ff4949;
-            "
-            active-text="开始编辑"
-            inactive-text="关闭编辑"
-          ></el-switch>
+          <el-row>
+            <el-switch
+              v-model="isModified"
+              inline-prompt
+              style="
+                --el-switch-on-color: #13ce66;
+                --el-switch-off-color: #ff4949;
+              "
+              active-text="开始编辑"
+              inactive-text="关闭编辑"
+            ></el-switch>
+            <el-button
+              style="margin-left: 10px"
+              type="danger"
+              :icon="Delete"
+              @click="deleteObj"
+              circle
+            />
+          </el-row>
           <el-card
             style="max-height: 150px; overflow: auto"
             v-for="item in cardArrays"
@@ -46,6 +55,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from "vue";
 import PlotDraw from "../plot";
+import { Delete } from "@element-plus/icons-vue";
 
 const cardArrays = [
   {
@@ -189,6 +199,10 @@ watch(isModified, (newValue) => {
     draw?.endModify();
   }
 });
+
+function deleteObj() {
+  draw?.clearOne();
+}
 
 function plotDraw(name: string) {
   console.log(name);
