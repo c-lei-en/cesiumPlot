@@ -1,6 +1,6 @@
 <template>
   <div v-if="isDrawer" class="drawTool">
-    <el-tabs style="height: 100%" type="border-card">
+    <el-tabs @tab-click="tabClick" style="height: 100%" type="border-card">
       <el-tab-pane label="标绘工具">
         <el-space :fill="true" wrap>
           <el-row>
@@ -19,6 +19,7 @@
               type="danger"
               :icon="Delete"
               @click="deleteObj"
+              :disabled="deleteBool"
               circle
             />
           </el-row>
@@ -46,7 +47,7 @@
         </el-space></el-tab-pane
       >
       <el-tab-pane label="样式修改">
-        <input />
+        <div v-if="showTool == 'none'">请选择一个要素</div>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -55,7 +56,9 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from "vue";
 import PlotDraw from "../plot";
+import emitter from "@/mitt";
 import { Delete } from "@element-plus/icons-vue";
+import type { TabsPaneContext } from "element-plus/es/tokens/tabs";
 
 const cardArrays = [
   {
@@ -178,10 +181,10 @@ const props = defineProps({
     require: true,
   },
 });
-const emitter = defineEmits(["changeShow"]);
+const emits = defineEmits(["changeShow"]);
 const isDrawer = computed({
   get: () => props.drawer,
-  set: (val) => emitter("changeShow", val),
+  set: (val) => emits("changeShow", val),
 });
 
 const isModified = ref(false);
@@ -200,13 +203,29 @@ watch(isModified, (newValue) => {
   }
 });
 
+let showTool = ref("none");
+let deleteBool = ref(true);
+emitter.on("seletedOne", () => {
+  deleteBool.value = false;
+});
 function deleteObj() {
   draw?.clearOne();
+  deleteBool.value = true;
 }
 
 function plotDraw(name: string) {
   console.log(name);
   draw?.draw(name);
+}
+
+// * 标签页点击事件
+function tabClick(pane: TabsPaneContext) {
+  showTool.value = "none";
+  if (pane.props.label == "样式修改") {
+    draw?.startModified();
+  } else if (draw.handler) {
+    draw?.endModify();
+  }
 }
 </script>
 
