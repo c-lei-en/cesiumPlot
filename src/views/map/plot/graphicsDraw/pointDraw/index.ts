@@ -49,6 +49,7 @@ class Marker extends BasePoint implements PlotFuncI {
   disable() {
     if (this.pointPrimitive) {
       window.Viewer.billboards.remove(this.pointPrimitive);
+      window.Viewer.billboards.remove(this.floatPoint);
       this.pointPrimitive = null;
     }
     this.state = -1;
