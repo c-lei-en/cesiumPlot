@@ -228,6 +228,7 @@ let pointSelect = ref("1");
 let pointUrl = ref("");
 emitter.on("seletedOne", () => {
   deleteBool.value = false;
+  showTool.value = draw?.nowObj?.baseType as string;
 });
 function deleteObj() {
   draw?.clearOne();
