@@ -28,6 +28,7 @@ import emitter from "@/mitt";
 
 class BaseArea implements BaseAreaI {
   type: string;
+  baseType: string;
   objId: number;
   handler: any;
   state: number;
@@ -43,6 +44,7 @@ class BaseArea implements BaseAreaI {
   clickStep: number;
   constructor(obj: BaseAreaI) {
     this.type = obj.type;
+    this.baseType = "area";
     this.objId = obj.objId;
     this.handler = obj.handler;
     this.areaPrimitive = obj.areaPrimitive;

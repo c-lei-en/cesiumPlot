@@ -27,6 +27,7 @@ import emitter from "@/mitt";
 
 class BaseArrow implements BaseArrowI {
   type: string;
+  baseType: string;
   objId: number;
   handler: any;
   state: number;
@@ -42,6 +43,7 @@ class BaseArrow implements BaseArrowI {
   clickStep: number;
   constructor(obj: BaseArrowI) {
     this.type = obj.type;
+    this.baseType = "arrow";
     this.objId = obj.objId;
     this.handler = obj.handler;
     this.arrowPrimitive = obj.arrowPrimitive;

@@ -11,6 +11,7 @@ import emitter from "@/mitt";
 
 class BasePoint implements BasePointI {
   type: string;
+  baseType: string;
   objId: number;
   handler: any;
   state: number; //state用于区分当前的状态 0 为删除 1为添加 2为编辑
@@ -20,6 +21,7 @@ class BasePoint implements BasePointI {
   pointList: any[];
   constructor(obj: BasePointI) {
     this.type = obj.type;
+    this.baseType = "point";
     this.objId = obj.objId;
     this.handler = obj.handler;
     this.pointPrimitive = obj.pointPrimitive;

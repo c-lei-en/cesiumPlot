@@ -23,6 +23,7 @@ import emitter from "@/mitt";
 
 class BaseLine implements BaseLineI {
   type: string;
+  baseType: string;
   objId: number;
   handler: any;
   state: number;
@@ -38,6 +39,7 @@ class BaseLine implements BaseLineI {
   clickStep: number;
   constructor(obj: BaseLineI) {
     this.type = obj.type;
+    this.baseType = "line";
     this.objId = obj.objId;
     this.handler = obj.handler;
     this.linePrimitive = obj.linePrimitive;
