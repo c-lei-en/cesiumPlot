@@ -47,26 +47,11 @@
         </el-space></el-tab-pane
       >
       <el-tab-pane label="样式修改">
-        <div v-if="showTool == 'none'">请选择一个要素</div>
-        <div v-if="showTool == 'point'">
-          <div class="mt-4">
-            <el-input v-model="pointUrl" placeholder="请输入相应模型/图片地址">
-              <template #prepend>
-                <el-select
-                  v-model="pointSelect"
-                  placeholder="Select"
-                  style="width: 115px"
-                >
-                  <el-option label="模型" value="1" />
-                  <el-option label="图片" value="2" />
-                </el-select>
-              </template>
-            </el-input>
-          </div>
-        </div>
-        <div v-if="showTool == 'line'">请选择一个要素</div>
-        <div v-if="showTool == 'area'">请选择一个要素</div>
-        <div v-if="showTool == 'arrow'">请选择一个要素</div>
+        <!-- <div v-if="showTool == 'none'">请选择一个要素</div> -->
+        <PointMaterial v-if="showTool == 'none'" />
+        <div v-else-if="showTool == 'line'">请选择一个要素</div>
+        <div v-else-if="showTool == 'area'">请选择一个要素</div>
+        <div v-else-if="showTool == 'arrow'">请选择一个要素</div>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -74,6 +59,7 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from "vue";
+import PointMaterial from "./PointMaterial.vue";
 import PlotDraw from "../plot";
 import emitter from "@/mitt";
 import { Delete } from "@element-plus/icons-vue";
@@ -224,8 +210,6 @@ watch(isModified, (newValue) => {
 
 let showTool = ref("none");
 let deleteBool = ref(true);
-let pointSelect = ref("1");
-let pointUrl = ref("");
 emitter.on("seletedOne", () => {
   deleteBool.value = false;
   showTool.value = draw?.nowObj?.baseType as string;
