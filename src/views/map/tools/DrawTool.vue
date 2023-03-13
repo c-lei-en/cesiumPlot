@@ -47,8 +47,8 @@
         </el-space></el-tab-pane
       >
       <el-tab-pane label="样式修改">
-        <!-- <div v-if="showTool == 'none'">请选择一个要素</div> -->
-        <PointMaterial v-if="showTool == 'none'" />
+        <div v-if="showTool == 'none'">请选择一个要素</div>
+        <PointMaterial :draw="draw" v-if="showTool == 'point'" />
         <div v-else-if="showTool == 'line'">请选择一个要素</div>
         <div v-else-if="showTool == 'area'">请选择一个要素</div>
         <div v-else-if="showTool == 'arrow'">请选择一个要素</div>
@@ -220,7 +220,6 @@ function deleteObj() {
 }
 
 function plotDraw(name: string) {
-  console.log(name);
   draw?.draw(name);
 }
 
@@ -228,10 +227,15 @@ function plotDraw(name: string) {
 function tabClick(pane: TabsPaneContext) {
   showTool.value = "none";
   deleteBool.value = false;
-  if (pane.props.label == "样式修改") {
-    draw?.startModified();
-  } else if (draw.handler) {
-    draw?.endModify();
+  switch (pane.props.label) {
+    case "样式修改":
+      draw?.startModified();
+      break;
+    default:
+      draw.nowObj!.floatPoint.show = false;
+      draw.nowObj!.state = -1;
+      draw?.nowObj?.stopDraw();
+      break;
   }
 }
 </script>
