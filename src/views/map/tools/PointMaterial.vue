@@ -11,7 +11,10 @@
         </el-select>
       </template>
     </el-input>
-    <el-button type="primary" style="margin-top: 5px; margin-left: 80%"
+    <el-button
+      type="primary"
+      style="margin-top: 5px; margin-left: 80%"
+      @click="modelClick"
       >确定</el-button
     >
   </el-card>
@@ -51,11 +54,27 @@
 
 <script lang="ts" setup>
 import { reactive } from "vue";
+import PlotDraw from "../plot";
+import type { Marker } from "../plot/graphicsDraw/pointDraw";
+
+const props = defineProps({
+  draw: {
+    type: PlotDraw,
+    required: true,
+  },
+});
 
 let pointModel = reactive({
   modelUrl: "",
   modelName: "model",
 });
+
+function modelClick() {
+  if (pointModel.modelName != "model") {
+    let point = props.draw.nowObj as Marker;
+    point.pointPrimitive.image = pointModel.modelUrl;
+  }
+}
 
 let pointParticle = reactive({
   particleType: "BoxEmitter",
