@@ -7,7 +7,7 @@
       <template #prepend>
         <el-select v-model="pointModel.modelName" style="width: 80px">
           <el-option label="模型" value="model" />
-          <el-option label="图片" value="iamge" />
+          <el-option label="图片" value="image" />
         </el-select>
       </template>
     </el-input>
@@ -28,6 +28,7 @@
       v-model="pointParticle.particleType"
       placeholder="Select"
       style="width: 100%"
+      @change="particleChange"
     >
       <el-option label="盒发射器" value="BoxEmitter" />
       <el-option label="圆形发射器" value="CircleEmitter" />
@@ -46,13 +47,32 @@
         {{ item.name }}
       </template>
     </el-input>
-    <el-button type="primary" style="margin-top: 5px; margin-left: 80%"
+    <el-button
+      type="primary"
+      @click="particleClick"
+      style="margin-top: 5px; margin-left: 80%"
       >确定</el-button
     >
   </el-card>
 </template>
 
 <script lang="ts" setup>
+import {
+  Billboard,
+  BoxEmitter,
+  Cartesian2,
+  Cartesian3,
+  CircleEmitter,
+  Color,
+  ConeEmitter,
+  HeadingPitchRoll,
+  Matrix4,
+  Model,
+  ParticleSystem,
+  SphereEmitter,
+  Transforms,
+  Math as cesiumMath,
+} from "cesium";
 import { reactive } from "vue";
 import PlotDraw from "../plot";
 import type { Marker } from "../plot/graphicsDraw/pointDraw";
@@ -64,15 +84,46 @@ const props = defineProps({
   },
 });
 
+let point = props.draw.nowObj as Marker;
+
 let pointModel = reactive({
   modelUrl: "",
-  modelName: "model",
+  modelName: "image",
 });
-
 function modelClick() {
-  if (pointModel.modelName != "model") {
-    let point = props.draw.nowObj as Marker;
-    point.pointPrimitive.image = pointModel.modelUrl;
+  if (pointModel.modelName == "image") {
+    if (point.pointPrimitive instanceof Billboard) {
+      point.pointPrimitive.image = pointModel.modelUrl;
+    } else {
+      const position = Matrix4.getTranslation(
+        point.pointPrimitive.modelMatrix,
+        new Cartesian3()
+      );
+      window.Viewer.scene.primitives.remove(point.pointPrimitive);
+      point.pointPrimitive = point.showPrimitiveOnMap(position);
+    }
+  } else {
+    if (
+      point.pointPrimitive instanceof Model ||
+      point.pointPrimitive instanceof ParticleSystem
+    ) {
+      window.Viewer.scene.primitives.remove(point.pointPrimitive);
+      point.pointPrimitive = point.showPrimitiveModelOnMap(
+        pointModel.modelUrl,
+        point.pointPrimitive.modelMatrix
+      );
+    } else {
+      const position = point.pointPrimitive.position;
+      const modelMatrix = Transforms.headingPitchRollToFixedFrame(
+        position,
+        new HeadingPitchRoll(0, 0, 0)
+      );
+      window.Viewer.billboards.remove(point.pointPrimitive);
+      point.pointPrimitive = point.showPrimitiveModelOnMap(
+        pointModel.modelUrl,
+        modelMatrix
+      );
+    }
   }
 }
 
@@ -151,6 +202,119 @@ let pointParticle = reactive({
     },
   ],
 });
+function particleClick() {
+  let emitterParticle;
+  switch (pointParticle.particleType) {
+    case "BoxEmitter":
+      emitterParticle = new BoxEmitter(new Cartesian3(10.0, 10.0, 10.0));
+      break;
+    case "CircleEmitter":
+      emitterParticle = new CircleEmitter(2.0);
+      break;
+    case "ConeEmitter":
+      emitterParticle = new ConeEmitter(cesiumMath.toRadians(45.0));
+      break;
+    case "SphereEmitter":
+      emitterParticle = new SphereEmitter(2.5);
+      break;
+    default:
+      emitterParticle = new CircleEmitter(2.0);
+      break;
+  }
+  let modelMatrix;
+  if (point.pointPrimitive instanceof Billboard) {
+    modelMatrix = Transforms.headingPitchRollToFixedFrame(
+      point.pointPrimitive.position,
+      new HeadingPitchRoll(0, 0, 0)
+    );
+    window.Viewer.billboards.remove(point.pointPrimitive);
+  } else {
+    modelMatrix = point.pointPrimitive.modelMatrix;
+    window.Viewer.scene.primitives.remove(point.pointPrimitive);
+  }
+  const gravityScratch = new Cartesian3();
+
+  point.pointPrimitive = window.Viewer.scene.primitives.add(
+    new ParticleSystem({
+      image: pointParticle.particleInput[3].value,
+      startColor: Color.fromCssColorString(
+        pointParticle.particleInput[2].value as string
+      ).withAlpha(0.7),
+      endColor: Color.WHITE.withAlpha(0.0),
+
+      startScale: eval(
+        pointParticle.particleInput[0].value as string
+      ) as number,
+      endScale: eval(pointParticle.particleInput[1].value as string) as number,
+
+      minimumParticleLife: eval(
+        pointParticle.particleInput[8].value as string
+      ) as number,
+      maximumParticleLife: eval(
+        pointParticle.particleInput[9].value as string
+      ) as number,
+
+      minimumSpeed: eval(
+        pointParticle.particleInput[5].value as string
+      ) as number,
+      maximumSpeed: eval(
+        pointParticle.particleInput[6].value as string
+      ) as number,
+
+      imageSize: new Cartesian2(
+        eval(pointParticle.particleInput[4].value as string) as number,
+        eval(pointParticle.particleInput[4].value as string) as number
+      ),
+
+      emissionRate: eval(
+        pointParticle.particleInput[7].value as string
+      ) as number,
+
+      lifetime: 16.0,
+
+      emitter: emitterParticle,
+
+      emitterModelMatrix: modelMatrix,
+
+      updateCallback: function (p) {
+        const position = p.position;
+
+        Cartesian3.normalize(position, gravityScratch);
+        Cartesian3.multiplyByScalar(gravityScratch, 0, gravityScratch);
+
+        p.velocity = Cartesian3.add(p.velocity, gravityScratch, p.velocity);
+      },
+    })
+  );
+}
+
+function particleChange(val: string) {
+  console.log(val);
+
+  if (point.pointPrimitive instanceof ParticleSystem) {
+    switch (val) {
+      case "BoxEmitter":
+        point.pointPrimitive.emitter = new BoxEmitter(
+          new Cartesian3(10.0, 10.0, 10.0)
+        );
+        break;
+      case "CircleEmitter":
+        point.pointPrimitive.emitter = new CircleEmitter(2.0);
+        break;
+      case "ConeEmitter":
+        point.pointPrimitive.emitter = new ConeEmitter(
+          cesiumMath.toRadians(45.0)
+        );
+        break;
+      case "SphereEmitter":
+        point.pointPrimitive.emitter = new SphereEmitter(2.5);
+        break;
+      default:
+        point.pointPrimitive.emitter = new CircleEmitter(2.0);
+        break;
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped></style>
