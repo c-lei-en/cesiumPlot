@@ -229,12 +229,13 @@ function tabClick(pane: TabsPaneContext) {
   deleteBool.value = false;
   switch (pane.props.label) {
     case "样式修改":
-      draw?.startModified();
+      draw?.seletedOne();
       break;
     default:
-      draw.nowObj!.floatPoint.show = false;
-      draw.nowObj!.state = -1;
-      draw?.nowObj?.stopDraw();
+      draw.nowObj = null;
+      if (draw.handler) {
+        draw.endModify();
+      }
       break;
   }
 }
