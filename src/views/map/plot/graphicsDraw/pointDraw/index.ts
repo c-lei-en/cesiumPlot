@@ -1,8 +1,12 @@
 import {
   Cartesian3,
+  HeadingPitchRoll,
   HeightReference,
+  Matrix4,
+  Model,
   ScreenSpaceEventHandler,
   ScreenSpaceEventType,
+  Transforms,
   VerticalOrigin,
 } from "cesium";
 import type { PlotFuncI, PointArr, BasePointI } from "../../interface";
@@ -18,7 +22,7 @@ class BasePoint implements BasePointI {
   floatPoint: any;
   pointPrimitive: any;
   modifyHandler: any;
-  pointList: any[];
+  pointList: any;
   constructor(obj: BasePointI) {
     this.type = obj.type;
     this.baseType = "point";
@@ -138,7 +142,7 @@ class Marker extends BasePoint implements PlotFuncI {
       heightReference: HeightReference.CLAMP_TO_GROUND,
     });
   }
-  showPrimitiveOnMap(positons: PointArr[]) {
+  showPrimitiveOnMap(positons: Cartesian3) {
     return window.Viewer.billboards.add({
       position: positons,
       id: this.objId,
@@ -146,6 +150,22 @@ class Marker extends BasePoint implements PlotFuncI {
       verticalOrigin: VerticalOrigin.BOTTOM,
       heightReference: HeightReference.CLAMP_TO_GROUND,
     });
+  }
+  showPrimitiveModelOnMap(url: string, modelMatrix?: Matrix4 | undefined) {
+    return window.Viewer.scene.primitives.add(
+      Model.fromGltf({
+        id: this.objId,
+        url,
+        modelMatrix:
+          modelMatrix ??
+          Transforms.headingPitchRollToFixedFrame(
+            this.pointList as Cartesian3,
+            new HeadingPitchRoll(0, 0, 0)
+          ),
+        heightReference: HeightReference.CLAMP_TO_GROUND,
+        scene: window.Viewer.scene,
+      })
+    );
   }
 }
 
