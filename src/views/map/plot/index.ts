@@ -225,7 +225,6 @@ export default class PlotDraw {
               $this.nowObj = $this.drawArr[i];
               $this.drawArr[i].startModify();
               $this.endModify();
-              emitter.emit("seletedOne");
               break;
             }
           }
@@ -237,6 +236,23 @@ export default class PlotDraw {
     this.handler.removeInputAction(ScreenSpaceEventType.LEFT_CLICK);
     this.handler.destroy();
     this.handler = null;
+  }
+  seletedOne() {
+    const $this = this;
+    this.handler = new ScreenSpaceEventHandler(window.Viewer.scene.canvas);
+    // 单击选中开始编辑
+    this.handler.setInputAction(function (evt: any) {
+      const pick = window.Viewer.scene.pick(evt.position);
+      if (defined(pick) && pick.id) {
+        for (let i = 0; i < $this.drawArr.length; i++) {
+          if (pick.id == $this.drawArr[i].objId) {
+            $this.nowObj = $this.drawArr[i];
+            emitter.emit("seletedOne");
+            break;
+          }
+        }
+      }
+    }, ScreenSpaceEventType.LEFT_CLICK);
   }
   clearOne() {
     if (this.nowObj) {
