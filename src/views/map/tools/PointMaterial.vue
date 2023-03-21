@@ -159,7 +159,7 @@ let pointParticle = reactive({
       oninput: "value=value.replace(/*/g,'')",
     },
     {
-      value: 1.0,
+      value: 3.0,
       name: "图片尺寸",
       realName: "image",
       title: "请输入粒子对应图片尺寸",
@@ -173,14 +173,14 @@ let pointParticle = reactive({
       oninput: "value=value.replace(/[^0-9.]/g,'')",
     },
     {
-      value: 1.0,
+      value: 3.0,
       name: "最大速度",
       realName: "maximumSpeed",
       title: "请输入粒子最大速度",
       oninput: "value=value.replace(/[^0-9.]/g,'')",
     },
     {
-      value: 5.0,
+      value: 10.0,
       name: "每秒粒子数",
       realName: "emissionRate",
       title: "请输入每秒发射的粒子数",
@@ -194,7 +194,7 @@ let pointParticle = reactive({
       oninput: "value=value.replace(/[^0-9.]/g,'')",
     },
     {
-      value: 1.0,
+      value: 5.0,
       name: "最大存活时间",
       realName: "maximumParticleLife",
       title: "请输入粒子最大存活时间",
@@ -228,64 +228,61 @@ function particleClick() {
       new HeadingPitchRoll(0, 0, 0)
     );
     window.Viewer.billboards.remove(point.pointPrimitive);
-  } else {
+  } else if (point.pointPrimitive instanceof Model) {
     modelMatrix = point.pointPrimitive.modelMatrix;
     window.Viewer.scene.primitives.remove(point.pointPrimitive);
+  } else {
+    modelMatrix = point.pointPrimitive.modelMatrix;
   }
   const gravityScratch = new Cartesian3();
 
-  point.pointPrimitive = window.Viewer.scene.primitives.add(
-    new ParticleSystem({
-      image: pointParticle.particleInput[3].value,
-      startColor: Color.fromCssColorString(
-        pointParticle.particleInput[2].value as string
-      ).withAlpha(0.7),
-      endColor: Color.WHITE.withAlpha(0.0),
+  if (!(point.pointPrimitive instanceof ParticleSystem)) {
+    point.pointPrimitive = window.Viewer.scene.primitives.add(
+      new ParticleSystem({
+        lifetime: 16.0,
+        updateCallback: function (p) {
+          const position = p.position;
 
-      startScale: eval(
-        pointParticle.particleInput[0].value as string
-      ) as number,
-      endScale: eval(pointParticle.particleInput[1].value as string) as number,
+          Cartesian3.normalize(position, gravityScratch);
+          Cartesian3.multiplyByScalar(gravityScratch, 0, gravityScratch);
 
-      minimumParticleLife: eval(
-        pointParticle.particleInput[8].value as string
-      ) as number,
-      maximumParticleLife: eval(
-        pointParticle.particleInput[9].value as string
-      ) as number,
-
-      minimumSpeed: eval(
-        pointParticle.particleInput[5].value as string
-      ) as number,
-      maximumSpeed: eval(
-        pointParticle.particleInput[6].value as string
-      ) as number,
-
-      imageSize: new Cartesian2(
-        eval(pointParticle.particleInput[4].value as string) as number,
-        eval(pointParticle.particleInput[4].value as string) as number
-      ),
-
-      emissionRate: eval(
-        pointParticle.particleInput[7].value as string
-      ) as number,
-
-      lifetime: 16.0,
-
-      emitter: emitterParticle,
-
-      emitterModelMatrix: modelMatrix,
-
-      updateCallback: function (p) {
-        const position = p.position;
-
-        Cartesian3.normalize(position, gravityScratch);
-        Cartesian3.multiplyByScalar(gravityScratch, 0, gravityScratch);
-
-        p.velocity = Cartesian3.add(p.velocity, gravityScratch, p.velocity);
-      },
-    })
+          p.velocity = Cartesian3.add(p.velocity, gravityScratch, p.velocity);
+        },
+        emitterModelMatrix: modelMatrix,
+      })
+    );
+  }
+  point.pointPrimitive.emitter = emitterParticle;
+  point.pointPrimitive.image = pointParticle.particleInput[3].value;
+  point.pointPrimitive.startColor = Color.fromCssColorString(
+    pointParticle.particleInput[2].value as string
+  ).withAlpha(0.7);
+  point.pointPrimitive.endColor = Color.WHITE.withAlpha(0.0);
+  point.pointPrimitive.startScale = eval(
+    pointParticle.particleInput[0].value as string
+  ) as number;
+  point.pointPrimitive.endScale = eval(
+    pointParticle.particleInput[1].value as string
+  ) as number;
+  point.pointPrimitive.minimumParticleLife = eval(
+    pointParticle.particleInput[8].value as string
+  ) as number;
+  point.pointPrimitive.maximumParticleLife = eval(
+    pointParticle.particleInput[9].value as string
+  ) as number;
+  point.pointPrimitive.minimumSpeed = eval(
+    pointParticle.particleInput[5].value as string
+  ) as number;
+  point.pointPrimitive.maximumSpeed = eval(
+    pointParticle.particleInput[6].value as string
+  ) as number;
+  point.pointPrimitive.imageSize = new Cartesian2(
+    eval(pointParticle.particleInput[4].value as string) as number,
+    eval(pointParticle.particleInput[4].value as string) as number
   );
+  point.pointPrimitive.emissionRate = eval(
+    pointParticle.particleInput[7].value as string
+  ) as number;
 }
 
 function particleChange(val: string) {
