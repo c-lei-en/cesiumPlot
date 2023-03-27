@@ -51,7 +51,7 @@
         <PointMaterial :draw="draw" v-if="showTool == 'point'" />
         <LineMaterial :draw="draw" v-if="showTool == 'line'" />
         <AreaMaterial :draw="draw" v-if="showTool == 'area'" />
-        <div v-else-if="showTool == 'arrow'">请选择一个要素</div>
+        <ArrowMaterial :draw="draw" v-if="showTool == 'arrow'" />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -62,6 +62,7 @@ import { computed, onMounted, ref, watch } from "vue";
 import PointMaterial from "./PointMaterial.vue";
 import LineMaterial from "./LineMaterial.vue";
 import AreaMaterial from "./AreaMaterial.vue";
+import ArrowMaterial from "./ArrowMaterial.vue";
 import PlotDraw from "../plot";
 import emitter from "@/mitt";
 import { Delete } from "@element-plus/icons-vue";
