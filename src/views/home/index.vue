@@ -4,7 +4,8 @@
       <el-menu
         default-active="1-1"
         class="el-menu-vertical-demo"
-        :collapse="true"
+        :collapse="false"
+        :unique-opened="true"
       >
         <el-sub-menu index="1">
           <template #title>
@@ -14,10 +15,37 @@
             <span>地图展示</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="1-1" @click="isDraw = false"
+            <el-menu-item index="1-1" @click="displayClick('地图')"
               >地图</el-menu-item
             >
-            <el-menu-item index="1-2" @click="isDraw = true">编辑</el-menu-item>
+            <el-menu-item index="1-2" @click="displayClick('编辑')"
+              >编辑</el-menu-item
+            >
+          </el-menu-item-group>
+        </el-sub-menu>
+        <el-sub-menu index="2">
+          <template #title>
+            <el-icon>
+              <DataAnalysis />
+            </el-icon>
+            <span>空间分析</span>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item index="2-1" @click="analyzeClick('测量工具')"
+              >测量工具</el-menu-item
+            >
+            <el-menu-item index="2-2" @click="analyzeClick('透视分析')"
+              >透视分析</el-menu-item
+            >
+            <el-menu-item index="2-3" @click="analyzeClick('淹没分析')"
+              >淹没分析</el-menu-item
+            >
+            <el-menu-item index="2-4" @click="analyzeClick('可视域分析')"
+              >可视域分析</el-menu-item
+            >
+            <el-menu-item index="2-4" @click="analyzeClick('视频融合')"
+              >视频融合</el-menu-item
+            >
           </el-menu-item-group>
         </el-sub-menu>
       </el-menu>
@@ -26,24 +54,40 @@
       <RouterView />
     </el-main>
   </el-container>
-  <transition
-    leave-active-class="animate__animated animate__bounceInLeft"
-    enter-active-class="animate__animated animate__bounceInRight"
-  >
-    <DrawTool :drawer="isDraw" @change-show="changeShow"></DrawTool>
+  <transition enter-active-class="animate__animated animate__bounceInRight">
+    <DrawTool v-if="isDraw"></DrawTool>
+  </transition>
+  <transition enter-active-class="animate__animated animate__bounceInRight">
+    <AnalysisTool :analysisType="analysisType" v-if="isAnalyze"></AnalysisTool>
   </transition>
 </template>
 
 <script setup lang="ts">
 import { RouterView } from "vue-router";
 import { ref, defineComponent } from "vue";
-import { Location } from "@element-plus/icons-vue";
+import { Location, DataAnalysis } from "@element-plus/icons-vue";
 import DrawTool from "@/views/map/tools/DrawTool.vue";
+import AnalysisTool from "@/views/map/analysis/index.vue";
 
-defineComponent({ DrawTool });
+defineComponent({ DrawTool, AnalysisTool });
+
 const isDraw = ref(false);
-function changeShow(val: boolean) {
-  isDraw.value = val;
+function displayClick(type: string) {
+  isAnalyze.value = false;
+  if (type == "编辑") {
+    isDraw.value = true;
+  } else {
+    isDraw.value = false;
+  }
+}
+
+// * 空间分析工具
+const analysisType = ref("测量工具");
+const isAnalyze = ref(false);
+function analyzeClick(type: string) {
+  isDraw.value = false;
+  isAnalyze.value = true;
+  analysisType.value = type;
 }
 </script>
 
