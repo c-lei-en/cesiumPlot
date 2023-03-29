@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isDrawer" class="drawTool">
+  <div class="drawTool">
     <el-tabs @tab-click="tabClick" style="height: 100%" type="border-card">
       <el-tab-pane label="标绘工具">
         <el-space :fill="true" wrap>
@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import PointMaterial from "./PointMaterial.vue";
 import LineMaterial from "./LineMaterial.vue";
 import AreaMaterial from "./AreaMaterial.vue";
@@ -182,18 +182,6 @@ const cardArrays = [
     ],
   },
 ];
-
-const props = defineProps({
-  drawer: {
-    type: Boolean,
-    require: true,
-  },
-});
-const emits = defineEmits(["changeShow"]);
-const isDrawer = computed({
-  get: () => props.drawer,
-  set: (val) => emits("changeShow", val),
-});
 
 const isModified = ref(false);
 
