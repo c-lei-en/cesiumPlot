@@ -16,6 +16,7 @@ import {
   ElCard,
   ElButton,
   ElRow,
+  ElButtonGroup,
 } from "element-plus";
 export const components: any[] = [
   ElRadioGroup,
@@ -35,4 +36,5 @@ export const components: any[] = [
   ElCard,
   ElButton,
   ElRow,
+  ElButtonGroup,
 ];
