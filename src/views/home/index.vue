@@ -43,7 +43,7 @@
             <el-menu-item index="2-4" @click="analyzeClick('可视域分析')"
               >可视域分析</el-menu-item
             >
-            <el-menu-item index="2-4" @click="analyzeClick('视频融合')"
+            <el-menu-item index="2-5" @click="analyzeClick('视频融合')"
               >视频融合</el-menu-item
             >
           </el-menu-item-group>
@@ -66,7 +66,7 @@
 import { RouterView } from "vue-router";
 import { ref, defineComponent } from "vue";
 import { Location, DataAnalysis } from "@element-plus/icons-vue";
-import DrawTool from "@/views/map/tools/DrawTool.vue";
+import DrawTool from "@/views/map/plotTools/DrawTool.vue";
 import AnalysisTool from "@/views/map/analysis/index.vue";
 
 defineComponent({ DrawTool, AnalysisTool });
