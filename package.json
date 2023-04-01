@@ -12,11 +12,13 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@turf/turf": "^6.5.0",
     "animate.css": "^4.1.1",
     "cesium-navigation-es6": "^3.0.8",
     "element-plus": "^2.2.30",
     "mitt": "^3.0.0",
     "pinia": "^2.0.28",
+    "turf": "^3.0.14",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },
@@ -24,6 +26,7 @@
     "@rushstack/eslint-patch": "^1.1.4",
     "@types/jsdom": "^20.0.1",
     "@types/node": "^18.11.12",
+    "@types/turf": "^3.5.32",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vue/eslint-config-prettier": "^7.0.0",
     "@vue/eslint-config-typescript": "^11.0.0",
