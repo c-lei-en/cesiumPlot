@@ -2,8 +2,10 @@ import { getCatesian3FromPX } from "@/views/map/plot/tools";
 import {
   CallbackProperty,
   Cartesian3,
+  Cesium3DTileset,
   Color,
   Entity,
+  HeadingPitchRange,
   PolylineGraphics,
   Ray,
   ScreenSpaceEventHandler,
@@ -15,10 +17,22 @@ export class VisibilityAnalysis {
   handler: any;
   planeLineEntityList: any[];
   pointList: any[];
+  tileset: any;
   constructor() {
     this.planeLineEntityList = [];
     this.pointList = [];
     this.handler = new ScreenSpaceEventHandler(window.Viewer.scene.canvas);
+    this.add3DTile(
+      "http://localhost:8091/Cesium3DTiles/Tilesets/Tileset/tileset.json"
+    );
+  }
+
+  // * 添加3DTile
+  async add3DTile(url: string) {
+    this.tileset = await Cesium3DTileset.fromUrl(url, {});
+
+    window.Viewer.scene.primitives.add(this.tileset);
+    window.Viewer.zoomTo(this.tileset, new HeadingPitchRange(0.0, -0.3, 0.0));
   }
 
   // * 创建中间线条entity以适应动态数据
@@ -80,7 +94,13 @@ export class VisibilityAnalysis {
           this.drawLine(result, this.pointList[0], Color.GREEN); // 可视区域
           this.drawLine(result, this.pointList[1], Color.RED); // 不可视区域
         } else {
-          this.drawLine(this.pointList[0], this.pointList[1], Color.GREEN);
+          const tileResult = window.Viewer.scene.pickFromRay(ray);
+          if (defined(tileResult) && defined(tileResult.object)) {
+            this.drawLine(tileResult.position, this.pointList[0], Color.GREEN); // 可视区域
+            this.drawLine(tileResult.position, this.pointList[1], Color.RED); // 不可视区域
+          } else {
+            this.drawLine(this.pointList[0], this.pointList[1], Color.GREEN);
+          }
         }
         this.destoryHandler();
       }
@@ -120,6 +140,7 @@ export class VisibilityAnalysis {
   //   * 销毁实例
   destory() {
     this.clearAll();
+    window.Viewer.scene.primitives.remove(this.tileset);
     this.handler.destroy();
     this.handler = undefined;
   }
