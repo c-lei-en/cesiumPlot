@@ -11,6 +11,10 @@ import "element-plus/theme-chalk/dark/css-vars.css";
 
 import "animate.css";
 
+Object.defineProperty(globalThis, "CESIUM_BASE_URL", {
+  value: import.meta.env.VITE_CESIUM_BASE_URL,
+});
+
 const app = createApp(App);
 
 // 按需导入Element Plus组件

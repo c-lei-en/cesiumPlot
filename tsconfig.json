@@ -10,5 +10,10 @@
     {
       "path": "./tsconfig.vitest.json"
     }
+  ],
+  "include": [
+    "env.d.ts",
+    "src/**/*",
+    "./vite.config.*"
   ]
 }

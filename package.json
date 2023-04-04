@@ -2,6 +2,7 @@
   "name": "cesium-plot",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
@@ -9,16 +10,22 @@
     "test:unit": "vitest --environment jsdom --root src/",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "postinstall": "node static-copy.js",
+    "static-copy": "node static-copy.js"
   },
   "dependencies": {
     "@turf/turf": "^6.5.0",
     "animate.css": "^4.1.1",
     "cesium-navigation-es6": "^3.0.8",
+    "del": "^7.0.0",
     "element-plus": "^2.2.30",
     "mitt": "^3.0.0",
     "pinia": "^2.0.28",
+    "recursive-copy": "^2.0.14",
     "turf": "^3.0.14",
+    "vite-plugin-externals": "^0.6.2",
+    "vite-plugin-html-config": "^1.0.11",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },
@@ -33,7 +40,7 @@
     "@vue/test-utils": "^2.2.6",
     "@vue/tsconfig": "^0.1.3",
     "babel-plugin-import": "^1.13.6",
-    "cesium": "^1.102.0",
+    "cesium": "^1.104.0",
     "eslint": "^8.22.0",
     "eslint-plugin-vue": "^9.3.0",
     "jsdom": "^20.0.3",
