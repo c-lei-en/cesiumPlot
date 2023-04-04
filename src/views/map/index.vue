@@ -3,9 +3,11 @@
 </template>
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { Viewer, Rectangle, createWorldTerrain } from "cesium";
+import { Viewer, Rectangle, createWorldTerrain, Ion } from "cesium";
 import CesiumNavigation from "cesium-navigation-es6";
 onMounted(() => {
+  Ion.defaultAccessToken =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3MTNiMzk1My0zZmRlLTRmYjQtYTBlZC0wMTdhYjAzMTFiMTAiLCJpZCI6MTQ3NjQsInNjb3BlcyI6WyJhc2wiLCJhc3IiLCJhc3ciLCJnYyJdLCJpYXQiOjE1NjYzMDc3NjZ9.ddc1YqTozjcAmoYQBE2Na5gr8RClBNKeB8QfkAwyPqk";
   window.Viewer = new Viewer("cesiumContainer", {
     animation: true, // * 左下角圆盘 速度控制器
     shouldAnimate: true, // * 当动画控件出现，用来控制是否通过旋转控件，旋转场景
