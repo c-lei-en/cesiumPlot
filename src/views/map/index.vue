@@ -3,9 +3,9 @@
 </template>
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { Viewer, Rectangle, createWorldTerrain, Ion } from "cesium";
+import { Viewer, Rectangle, Ion, createWorldTerrainAsync } from "cesium";
 import CesiumNavigation from "cesium-navigation-es6";
-onMounted(() => {
+onMounted(async () => {
   Ion.defaultAccessToken =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3MTNiMzk1My0zZmRlLTRmYjQtYTBlZC0wMTdhYjAzMTFiMTAiLCJpZCI6MTQ3NjQsInNjb3BlcyI6WyJhc2wiLCJhc3IiLCJhc3ciLCJnYyJdLCJpYXQiOjE1NjYzMDc3NjZ9.ddc1YqTozjcAmoYQBE2Na5gr8RClBNKeB8QfkAwyPqk";
   window.Viewer = new Viewer("cesiumContainer", {
@@ -30,7 +30,7 @@ onMounted(() => {
     shadows: false, // * 阴影效果
     projectionPicker: false, // * 透视投影和正投影之间切换
     requestRenderMode: true, // * 在指定情况下进行渲染,提高性能
-    terrainProvider: createWorldTerrain(),
+    terrainProvider: await createWorldTerrainAsync(),
   });
   window.Viewer._cesiumWidget._creditContainer.style.display = "none"; // * 隐藏版权信息
   window.Viewer.scene.globe.depthTestAgainstTerrain = true; // * 开启深度测试

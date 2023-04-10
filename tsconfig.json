@@ -12,6 +12,7 @@
     }
   ],
   "include": [
+    "./auto-imports.d.ts",
     "env.d.ts",
     "src/**/*",
     "./vite.config.*"

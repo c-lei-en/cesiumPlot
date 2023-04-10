@@ -4,11 +4,12 @@ import { defineConfig, loadEnv } from "vite";
 
 import htmlConfig from "vite-plugin-html-config";
 import { viteExternalsPlugin } from "vite-plugin-externals";
+import { viteCommonjs } from "@originjs/vite-plugin-commonjs";
 
 import vue from "@vitejs/plugin-vue";
-const AutoImport = require("unplugin-auto-import/vite");
-const Components = require("unplugin-vue-components/vite");
-const { ElementPlusResolver } = require("unplugin-vue-components/resolvers");
+import AutoImport from "unplugin-auto-import/vite";
+import Components from "unplugin-vue-components/vite";
+import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 
 // https://vitejs.dev/config/
 export default ({ mode: VITE_MODE }: { mode: string }) => {
@@ -18,6 +19,7 @@ export default ({ mode: VITE_MODE }: { mode: string }) => {
 
   const plugins = [
     vue(),
+    viteCommonjs(),
     AutoImport({
       resolvers: [ElementPlusResolver()],
     }),
