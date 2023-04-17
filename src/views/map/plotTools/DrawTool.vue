@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, onUnmounted, ref, watch } from "vue";
 import PointMaterial from "./PointMaterial.vue";
 import LineMaterial from "./LineMaterial.vue";
 import AreaMaterial from "./AreaMaterial.vue";
@@ -201,10 +201,11 @@ watch(isModified, (newValue) => {
 
 let showTool = ref("none");
 let deleteBool = ref(true);
-emitter.on("seletedOne", () => {
+emitter.on("seletedOne", changeToolVisible);
+function changeToolVisible() {
   deleteBool.value = false;
   showTool.value = draw?.nowObj?.baseType as string;
-});
+}
 function deleteObj() {
   draw?.clearOne();
   deleteBool.value = true;
@@ -230,6 +231,10 @@ function tabClick(pane: TabsPaneContext) {
       break;
   }
 }
+
+onUnmounted(() => {
+  emitter.off("seletedOne", changeToolVisible);
+});
 </script>
 
 <style lang="scss" scoped>

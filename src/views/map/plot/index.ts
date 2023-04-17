@@ -225,6 +225,7 @@ export default class PlotDraw {
               $this.nowObj = $this.drawArr[i];
               $this.drawArr[i].startModify();
               $this.endModify();
+              emitter.emit("seletedOne");
               break;
             }
           }

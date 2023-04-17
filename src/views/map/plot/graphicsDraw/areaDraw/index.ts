@@ -20,6 +20,7 @@ import {
   PolygonHierarchy,
   Rectangle as cesiumRectangle,
   RectangleGeometry,
+  BillboardCollection,
 } from "cesium";
 import { getCatesian3FromPX, cartesianToLonlat } from "../../tools";
 import type { BaseAreaI, PlotFuncI, PointArr } from "./../../interface";
@@ -88,6 +89,12 @@ class BaseArea implements BaseAreaI {
     }
   }
   creatPoint(cartesian: number[]): Primitive {
+    if (!window.Viewer.billboards)
+      window.Viewer.billboards = window.Viewer.scene.primitives.add(
+        new BillboardCollection({
+          scene: window.Viewer.scene,
+        })
+      );
     return window.Viewer.billboards.add({
       id: "moveBillboard",
       position: cartesian,
@@ -138,7 +145,6 @@ class Circle extends BaseArea implements PlotFuncI {
         this.areaEntity = null;
         this.floatPoint = null;
         this.stopDraw();
-        emitter.emit("drawEnd");
       }
     }, ScreenSpaceEventType.LEFT_CLICK);
     // * 移动时改变物体positions
@@ -249,8 +255,7 @@ class Circle extends BaseArea implements PlotFuncI {
         semiMinorAxis: distance,
       }),
     });
-
-    return window.Viewer.scene.groundPrimitives.add(
+    const primitive = window.Viewer.scene.groundPrimitives.add(
       new GroundPrimitive({
         geometryInstances: instance,
         appearance: new Appearance({
@@ -258,6 +263,8 @@ class Circle extends BaseArea implements PlotFuncI {
         }),
       })
     );
+    emitter.emit("drawEnd");
+    return primitive;
   }
   // * 创建中间entity以适应动态数据
   createEntity(): Entity {
@@ -324,7 +331,6 @@ class Ellipse extends BaseArea implements PlotFuncI {
         this.areaEntity = null;
         this.floatPoint = null;
         this.stopDraw();
-        emitter.emit("drawEnd");
       }
     }, ScreenSpaceEventType.LEFT_CLICK);
     // * 移动时改变物体positions
@@ -439,8 +445,7 @@ class Ellipse extends BaseArea implements PlotFuncI {
         rotation: this.computeRoate(),
       }),
     });
-
-    return window.Viewer.scene.groundPrimitives.add(
+    const primitive = window.Viewer.scene.groundPrimitives.add(
       new GroundPrimitive({
         geometryInstances: instance,
         appearance: new Appearance({
@@ -448,6 +453,8 @@ class Ellipse extends BaseArea implements PlotFuncI {
         }),
       })
     );
+    emitter.emit("drawEnd");
+    return primitive;
   }
   // * 创建中间entity以适应动态数据
   createEntity(): Entity {
@@ -550,7 +557,6 @@ class Lune extends BaseArea implements PlotFuncI {
         this.areaEntity = null;
         this.floatPoint = null;
         this.stopDraw();
-        emitter.emit("drawEnd");
       }
     }, ScreenSpaceEventType.LEFT_CLICK);
     // * 移动时改变物体positions
@@ -665,8 +671,7 @@ class Lune extends BaseArea implements PlotFuncI {
         ),
       }),
     });
-
-    return window.Viewer.scene.groundPrimitives.add(
+    const primitive = window.Viewer.scene.groundPrimitives.add(
       new GroundPrimitive({
         geometryInstances: instance,
         appearance: new Appearance({
@@ -674,6 +679,8 @@ class Lune extends BaseArea implements PlotFuncI {
         }),
       })
     );
+    emitter.emit("drawEnd");
+    return primitive;
   }
   // * 创建中间entity以适应动态数据
   createEntity(): Entity {
@@ -740,7 +747,6 @@ class Sector extends BaseArea implements PlotFuncI {
         this.areaEntity = null;
         this.floatPoint = null;
         this.stopDraw();
-        emitter.emit("drawEnd");
       }
     }, ScreenSpaceEventType.LEFT_CLICK);
     // * 移动时改变物体positions
@@ -855,8 +861,7 @@ class Sector extends BaseArea implements PlotFuncI {
         ),
       }),
     });
-
-    return window.Viewer.scene.groundPrimitives.add(
+    const primitives = window.Viewer.scene.groundPrimitives.add(
       new GroundPrimitive({
         geometryInstances: instance,
         appearance: new Appearance({
@@ -864,6 +869,8 @@ class Sector extends BaseArea implements PlotFuncI {
         }),
       })
     );
+    emitter.emit("drawEnd");
+    return primitives;
   }
   // * 创建中间entity以适应动态数据
   createEntity(): Entity {
@@ -930,7 +937,6 @@ class Rectangle extends BaseArea implements PlotFuncI {
         this.areaEntity = null;
         this.floatPoint = null;
         this.stopDraw();
-        emitter.emit("drawEnd");
       }
     }, ScreenSpaceEventType.LEFT_CLICK);
     // * 移动时改变物体positions
@@ -1047,8 +1053,7 @@ class Rectangle extends BaseArea implements PlotFuncI {
         rectangle: cesiumRectangle.fromDegrees(res[0], res[2], res[1], res[3]),
       }),
     });
-
-    return window.Viewer.scene.groundPrimitives.add(
+    const primitive = window.Viewer.scene.groundPrimitives.add(
       new GroundPrimitive({
         geometryInstances: instance,
         appearance: new Appearance({
@@ -1056,6 +1061,8 @@ class Rectangle extends BaseArea implements PlotFuncI {
         }),
       })
     );
+    emitter.emit("drawEnd");
+    return primitive;
   }
   // * 创建中间entity以适应动态数据
   createEntity(): Entity {
@@ -1147,7 +1154,6 @@ class ClosedCurve extends BaseArea implements PlotFuncI {
       this.areaEntity = null;
       this.floatPoint = null;
       this.stopDraw();
-      emitter.emit("drawEnd");
     }, ScreenSpaceEventType.RIGHT_CLICK);
   }
   startModify() {
@@ -1238,8 +1244,7 @@ class ClosedCurve extends BaseArea implements PlotFuncI {
         polygonHierarchy: new PolygonHierarchy(res),
       }),
     });
-
-    return window.Viewer.scene.groundPrimitives.add(
+    const primitive = window.Viewer.scene.groundPrimitives.add(
       new GroundPrimitive({
         geometryInstances: instance,
         appearance: new Appearance({
@@ -1247,6 +1252,8 @@ class ClosedCurve extends BaseArea implements PlotFuncI {
         }),
       })
     );
+    emitter.emit("drawEnd");
+    return primitive;
   }
   // * 创建中间entity以适应动态数据
   createEntity(): Entity {
@@ -1335,7 +1342,6 @@ class Polygon extends BaseArea implements PlotFuncI {
       this.areaEntity = null;
       this.floatPoint = null;
       this.stopDraw();
-      emitter.emit("drawEnd");
     }, ScreenSpaceEventType.RIGHT_CLICK);
   }
   startModify() {
@@ -1420,8 +1426,7 @@ class Polygon extends BaseArea implements PlotFuncI {
         polygonHierarchy: new PolygonHierarchy(this.pointList),
       }),
     });
-
-    return window.Viewer.scene.groundPrimitives.add(
+    const primitive = window.Viewer.scene.groundPrimitives.add(
       new GroundPrimitive({
         geometryInstances: instance,
         appearance: new Appearance({
@@ -1429,6 +1434,8 @@ class Polygon extends BaseArea implements PlotFuncI {
         }),
       })
     );
+    emitter.emit("drawEnd");
+    return primitive;
   }
   // * 创建中间entity以适应动态数据
   createEntity(): Entity {
@@ -1445,7 +1452,7 @@ class Polygon extends BaseArea implements PlotFuncI {
   }
 }
 
-// * freeHandPolygon 多边形
+// * freeHandPolygon 自由面
 class FreeHandPolygon extends BaseArea implements PlotFuncI {
   constructor() {
     super({
@@ -1505,7 +1512,6 @@ class FreeHandPolygon extends BaseArea implements PlotFuncI {
       this.areaEntity = null;
       this.floatPoint = null;
       this.stopDraw();
-      emitter.emit("drawEnd");
     }, ScreenSpaceEventType.RIGHT_CLICK);
   }
   startModify() {
@@ -1590,8 +1596,7 @@ class FreeHandPolygon extends BaseArea implements PlotFuncI {
         polygonHierarchy: new PolygonHierarchy(this.pointList),
       }),
     });
-
-    return window.Viewer.scene.groundPrimitives.add(
+    const primitive = window.Viewer.scene.groundPrimitives.add(
       new GroundPrimitive({
         geometryInstances: instance,
         appearance: new Appearance({
@@ -1599,6 +1604,8 @@ class FreeHandPolygon extends BaseArea implements PlotFuncI {
         }),
       })
     );
+    emitter.emit("drawEnd");
+    return primitive;
   }
   // * 创建中间entity以适应动态数据
   createEntity(): Entity {
@@ -1615,7 +1622,7 @@ class FreeHandPolygon extends BaseArea implements PlotFuncI {
   }
 }
 
-// * gatheringPlace 多边形
+// * gatheringPlace 聚集地
 class GatheringPlace extends BaseArea implements PlotFuncI {
   constructor() {
     super({
@@ -1655,7 +1662,6 @@ class GatheringPlace extends BaseArea implements PlotFuncI {
         this.areaEntity = null;
         this.floatPoint = null;
         this.stopDraw();
-        emitter.emit("drawEnd");
       }
     }, ScreenSpaceEventType.LEFT_CLICK);
     // * 移动时改变物体positions
@@ -1769,8 +1775,7 @@ class GatheringPlace extends BaseArea implements PlotFuncI {
         polygonHierarchy: new PolygonHierarchy(res),
       }),
     });
-
-    return window.Viewer.scene.groundPrimitives.add(
+    const primitive = window.Viewer.scene.groundPrimitives.add(
       new GroundPrimitive({
         geometryInstances: instance,
         appearance: new Appearance({
@@ -1778,6 +1783,8 @@ class GatheringPlace extends BaseArea implements PlotFuncI {
         }),
       })
     );
+    emitter.emit("drawEnd");
+    return primitive;
   }
   // * 创建中间entity以适应动态数据
   createEntity(): Entity {
