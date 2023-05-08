@@ -50,17 +50,18 @@ const viewshedConfig = reactive([
   },
   {
     name: "可视域水平夹角",
-    value: 0,
+    value: 90,
     oninput: "value=value.replace(/[^0-9.]/g,'')",
   },
   {
     name: "可视域垂直夹角",
-    value: 0,
+    value: 60,
     oninput: "value=value.replace(/[^0-9.]/g,'')",
   },
 ]);
+let viewshedList = [];
+const drawHandler = new ScreenSpaceEventHandler(window.Viewer.scene.canvas);
 function viewshedClick() {
-  const drawHandler = new ScreenSpaceEventHandler(window.Viewer.scene.canvas);
   // * 监测鼠标左击事件
   drawHandler.setInputAction((event) => {
     let position = event.position;
@@ -69,19 +70,27 @@ function viewshedClick() {
     if (!defined(ray)) return;
     let cartesian = window.Viewer.scene.globe.pick(ray, window.Viewer.scene);
     if (!defined(cartesian)) return;
-    new ViewshedAnalysis({
+    const viewshed = new ViewshedAnalysis({
       viewPosition: cartesian,
       viewDistance: 1000,
-      viewHeading: 0,
-      viewPitch: 0,
-      horizontalViewAngle: 90,
-      verticalViewAngle: 60,
+      viewHeading: viewshedConfig[0].value,
+      viewPitch: viewshedConfig[1].value,
+      horizontalViewAngle: viewshedConfig[2].value,
+      verticalViewAngle: viewshedConfig[3].value,
       visibleAreaColor: Color.GREEN,
       invisibleAreaColor: Color.RED,
     });
+    viewshedList.push(viewshed);
   }, ScreenSpaceEventType.LEFT_CLICK);
 }
-function clearViewshedClick() {}
+function clearViewshedClick() {
+  drawHandler.destroy();
+  viewshedList.forEach((viewshed, i) => {
+    viewshedList[i] = null;
+    viewshed.clear();
+  });
+  viewshedList = [];
+}
 </script>
 
 <style lang="scss" scoped></style>

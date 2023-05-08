@@ -82,7 +82,7 @@ export class ViewshedAnalysis {
       this.sketch = null;
     }
     if (this.frustumOutline) {
-      this.frustumOutline.destroy();
+      window.Viewer.scene.primitives.remove(this.frustumOutline);
       this.frustumOutline = null;
     }
     if (this.postStage) {
@@ -128,6 +128,7 @@ export class ViewshedAnalysis {
     window.Viewer.scene.shadowMap = this.shadowMap;
     window.Viewer.scene.globe.shadows = ShadowMode.ENABLED;
     window.Viewer.scene.globe.depthTestAgainstTerrain = true;
+    window.Viewer.scene.logarithmicDepthBuffer = true;
   }
   private createPostStage() {
     const fs = glsl;
