@@ -60,8 +60,9 @@ const viewshedConfig = reactive([
   },
 ]);
 let viewshedList = [];
-const drawHandler = new ScreenSpaceEventHandler(window.Viewer.scene.canvas);
+let drawHandler = new ScreenSpaceEventHandler(window.Viewer.scene.canvas);
 function viewshedClick() {
+  drawHandler = new ScreenSpaceEventHandler(window.Viewer.scene.canvas);
   // * 监测鼠标左击事件
   drawHandler.setInputAction((event) => {
     let position = event.position;
