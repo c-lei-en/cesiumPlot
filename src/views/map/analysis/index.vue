@@ -5,6 +5,7 @@
     <VideoOn v-else-if="props.analysisType == '视频融合'" />
     <ViewshedTool v-else-if="props.analysisType == '可视域分析'" />
     <VisibilityTool v-else-if="props.analysisType == '透视分析'" />
+    <TerrainCutting v-else-if="props.analysisType == '地形开挖'" />
   </div>
 </template>
 
@@ -15,6 +16,7 @@ import FloodTool from "./tools/FloodTool.vue";
 import VideoOn from "./tools/VideoOn.vue";
 import ViewshedTool from "./tools/ViewshedTool.vue";
 import VisibilityTool from "./tools/VisibilityTool.vue";
+import TerrainCutting from "./tools/TerrainCutting.vue";
 
 defineComponent({
   MeasureTool,
@@ -22,6 +24,7 @@ defineComponent({
   VideoOn,
   ViewshedTool,
   VisibilityTool,
+  TerrainCutting,
 });
 
 const props = defineProps({
