@@ -46,6 +46,9 @@
             <el-menu-item index="2-5" @click="analyzeClick('视频融合')"
               >视频融合</el-menu-item
             >
+            <el-menu-item index="2-6" @click="analyzeClick('地形开挖')"
+              >地形开挖</el-menu-item
+            >
           </el-menu-item-group>
         </el-sub-menu>
       </el-menu>
