@@ -13,7 +13,7 @@
       >
     </el-button-group>
   </el-card>
-  <video id="myVideo" muted="" autoplay="" loop="" crossorigin="" controls="">
+  <video id="myVideo" muted autoplay loop crossorigin="" controls>
     <source :src="videoUrl" type="video/webm" />
   </video>
 </template>
