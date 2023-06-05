@@ -86,6 +86,7 @@ const props = defineProps({
 
 let point = props.draw.nowObj as Marker;
 
+// /src/assets/models/CesiumAir/Cesium_Air.gltf
 let pointModel = reactive({
   modelUrl: "",
   modelName: "image",
